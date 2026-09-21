@@ -106,3 +106,15 @@ if (location.hash) {
     target.classList.add("card--linked");
   }
 }
+
+
+/* ---------- writing ---------- */
+const posts = document.getElementById("posts");
+
+if (posts && typeof WRITING !== "undefined") {
+  const fmt = d => new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  posts.innerHTML = WRITING.map(w => `<li>
+    <a href="${esc(w.href)}" target="_blank" rel="noopener">${esc(w.title)}</a>
+    <span class="post-meta">${fmt(w.date)}${w.note ? " · " + esc(w.note) : ""}</span>
+  </li>`).join("");
+}
