@@ -38,6 +38,10 @@ function cardHTML(p) {
       <h3>${esc(p.title)}</h3>
       <p>${esc(p.blurb)}</p>
       ${p.result ? `<p class="result">${esc(p.result)}</p>` : ""}
+      ${(p.details || []).length ? `<details class="detail">
+        <summary>What it covers</summary>
+        <ul>${p.details.map(d => `<li>${esc(d)}</li>`).join("")}</ul>
+      </details>` : ""}
       ${links ? `<div class="card-links">${links}</div>` : ""}
       <p class="stack">${(p.stack || []).map(esc).join(" · ")}</p>
     </div>

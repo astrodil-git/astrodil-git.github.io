@@ -47,8 +47,3 @@ git add -A && git commit -m "add project" && git push
 ## Custom domain (optional)
 
 Add a `CNAME` file containing your domain, then point a `CNAME` DNS record at `astrodil-git.github.io`.
-
-## Note on what goes here
-
-Work is described at the level it's already public. Internal architecture diagrams, credentials,
-customer names, and anything from a private repo stay out.

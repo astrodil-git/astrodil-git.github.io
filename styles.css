@@ -275,12 +275,6 @@ h1 em {
 
 .about p { color: var(--muted); margin: 0; max-width: 54ch; }
 
-.note {
-  margin-top: 36px !important;
-  font-size: 13px;
-  color: var(--dim) !important;
-  max-width: 70ch;
-}
 
 footer {
   padding: 48px 24px 72px;
@@ -303,4 +297,55 @@ footer {
 .card--linked {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* supporting detail: the specific pieces inside a project, collapsed by default
+   so the grid stays scannable */
+.detail { margin: 2px 0; }
+
+.detail summary {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  cursor: pointer;
+  list-style: none;
+  padding: 3px 0;
+  transition: color .15s;
+}
+
+.detail summary::-webkit-details-marker { display: none; }
+
+.detail summary::before {
+  content: "+\00a0";
+  color: var(--accent);
+}
+
+.detail[open] summary::before { content: "−\00a0"; }
+
+.detail summary:hover { color: var(--text); }
+
+.detail ul {
+  margin: 8px 0 4px;
+  padding-left: 16px;
+  list-style: none;
+}
+
+.detail li {
+  position: relative;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  padding: 3px 0;
+}
+
+.detail li::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 12px;
+  width: 6px;
+  height: 1px;
+  background: var(--dim);
 }

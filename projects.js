@@ -24,6 +24,13 @@ const PROJECTS = [
     blurb:
       "The connector that lets Claude, ChatGPT and Cursor pull live market data — prices, fundamentals, estimates, news, symbology, macro — through the Model Context Protocol. I built the tool surface, the auth layer, and the deploy path across two production targets.",
     result: "Live in the Claude connector directory",
+    details: [
+      "Workspace resolution, so a fetch reaches the dataset the user actually named",
+      "Search tuned to match datasets by the words that describe them",
+      "Error semantics: not-found, subscription gap and auth failure each read distinctly",
+      "Truncation disclosure when a response is capped to the newest records",
+      "Synthetic monitoring exercising auth, fetch and response on the live path"
+    ],
     stack: ["Python", "MCP", "OAuth", "Cloud Run", "GKE"],
     media: { type: "video", src: "assets/media/claude-mcp-connector.mp4", alt: "Claude pulling live market data through the viaNexus MCP connector" },
     links: [
@@ -60,6 +67,12 @@ const PROJECTS = [
     blurb:
       "A real-time classification system for SEC 8-K filings. Every 8-K declares its own item codes — 2.02 for results of operations, 5.02 for director changes — and SEC publishes those as structured metadata, so the agent reads that field directly: no HTML download, no regex, no LLM in the data path. It sweeps the daily index hourly, keys every write to the SEC accession number so reruns can't duplicate, and feeds the earnings calendar pipeline plus a live dashboard and REST API.",
     result: "Classifies the whole S&P 500 in 30–40 requests per cycle",
+    details: [
+      "Rate-limited EDGAR client running under SEC's fair-access ceiling",
+      "Incremental hourly sweep of the daily index, weekly full sweep for backfill",
+      "Accession-keyed writes, so reruns are idempotent",
+      "Live dashboard and REST API over the classified set"
+    ],
     stack: ["Python", "FastAPI", "Redis", "Docker", "SEC EDGAR"],
     links: []
   },
@@ -71,6 +84,12 @@ const PROJECTS = [
     blurb:
       "The pipeline behind CORE/EARNINGS_CALENDAR. It predicts each company's next report date from its filing history, then confirms or corrects that prediction the moment the 8-K classifier sees the real filing, and carries a pre/post-market session indicator so you know whether a print lands before the open or after the close.",
     result: "467 symbols with confirmed sessions, up from 230",
+    details: [
+      "Prediction algorithm derived from each company's filing cadence",
+      "Confirmation from the 8-K agent, keyed to the quarterly release item",
+      "Pre/post-market session indicator on every record",
+      "Roll-forward so a lapsed prediction advances instead of freezing"
+    ],
     stack: ["Python", "Airflow", "SingleStore", "SEC 8-K"],
     media: { type: "image", src: "assets/img/earnings-calendar.png", alt: "Earnings calendar widget" },
     links: [{ label: "Demo", href: "https://astrodil-git.github.io/dilpreet.kaur.earningCalDemo.github.io/" }]
@@ -127,6 +146,12 @@ const PROJECTS = [
     blurb:
       "The deploy path for the data platform: Cloud Build triggers, containerized Airflow DAG releases to GCP, and deploy steps that halt on a failed command instead of reporting success.",
     result: "Deploys that fail loudly",
+    details: [
+      "Cloud Build triggers for build and deploy, separated",
+      "Containerized DAG releases to GCP",
+      "Health probes and alerting on the agent services",
+      "Deploy steps that halt on a failed command"
+    ],
     stack: ["GCP", "Cloud Build", "Kubernetes", "Docker", "Airflow"],
     media: { type: "video", src: "assets/media/deploying-airflow.mp4", alt: "Airflow deploy" }
   },
@@ -149,6 +174,10 @@ const PROJECTS = [
     blurb:
       "A short-lived ticket system for dataset access. Every request mints a scoped, expiring ticket instead of passing an API key through the URL, which keeps long-lived credentials out of access logs, browser history, and anything else that records a query string.",
     result: "Scoped, expiring credentials on every dataset request",
+    details: [
+      "Per-request tickets minted in place of long-lived keys",
+      "Applied across dataset URLs, logo URLs and prediction sources"
+    ],
     stack: ["Node.js", "GCP", "Redis"],
     links: []
   },
@@ -159,6 +188,11 @@ const PROJECTS = [
     tags: ["Pipelines"],
     blurb:
       "Built the ingestion for a news provider from scratch, then split it into three clean datasets — articles, sentiment, and classification — so consumers could subscribe to what they actually needed instead of parsing one fat blob.",
+    details: [
+      "Split into three datasets: articles, sentiment and classification",
+      "Symbol normalization and ticker filtering on ingest",
+      "Schema consistency, so every field is always present"
+    ],
     stack: ["Python", "Airflow", "SingleStore"],
     links: []
   },
@@ -170,6 +204,11 @@ const PROJECTS = [
     blurb:
       "Global newswire ingestion over FTP. Batch loading opens fresh connections with retry on transient timeouts, a configurable backfill path stages through GCS, and cleanup failures are contained so they can't take the task down with them.",
     result: "Continuous global coverage with replayable backfill",
+    details: [
+      "FTP batch loading with fresh connections and timeout retry",
+      "Configurable backfill staged through GCS",
+      "Database-driven exchange suffix resolution"
+    ],
     stack: ["Python", "Airflow", "FTP", "GCS"],
     links: []
   },
@@ -181,6 +220,10 @@ const PROJECTS = [
     blurb:
       "The symbology layer that maps newswire tickers to the right market. Provider-specific exchange suffixes resolve through a database-driven MIC lookup — ISO 10383 codes to two-letter suffixes — so Frankfurt, Madrid and Istanbul each land where they belong and the mapping has exactly one source of truth.",
     result: "One lookup table behind every exchange suffix",
+    details: [
+      "ISO 10383 MIC codes mapped to provider suffixes",
+      "US class shares handled alongside international listings"
+    ],
     stack: ["Python", "SingleStore", "ISO 10383"],
     links: []
   },
@@ -196,34 +239,17 @@ const PROJECTS = [
     links: []
   },
   {
-    title: "MCP Monitoring & Alerting",
-    org: "viaNexus",
-    year: "2026",
-    tags: ["Infrastructure"],
-    blurb:
-      "Synthetic monitoring for the MCP stack. A probe exercises the proxy end to end on a schedule — real auth, real fetch, real response — alongside health checks for the classifier agent, with alerting tuned to page on a sustained failure rather than a single blip.",
-    result: "End-to-end probes on the live connector path",
-    stack: ["Python", "GCP Monitoring", "Terraform"],
-    links: []
-  },
-  {
-    title: "MCP Error Semantics",
-    org: "viaNexus",
-    year: "2026",
-    tags: ["AI", "Infrastructure"],
-    blurb:
-      "The error layer that makes the connector honest with an AI assistant. A missing dataset reads as not-found, a subscription gap reads differently from an auth failure, and a truncated response says it was truncated — so the model can tell the user what actually happened instead of confidently reporting the wrong reason.",
-    result: "Every failure mode says what it is",
-    stack: ["Python", "MCP", "OAuth"],
-    links: []
-  },
-  {
     title: "AI Crawler & SEO Work",
     org: "viaNexus",
     year: "2026",
     tags: ["Infrastructure"],
     blurb:
       "Made the marketing site legible to machines as well as people: an llms.txt route, a robots.txt tuned for AI crawlers, and a sweep of the Search Console 404s that were bleeding link equity.",
+    details: [
+      "llms.txt route and a robots.txt tuned for AI crawlers",
+      "Search Console 404 sweep",
+      "Analytics and theme build fixes"
+    ],
     stack: ["Ghost", "Handlebars", "Search Console"],
     links: [{ label: "vianexus.com", href: "https://vianexus.com" }]
   },
