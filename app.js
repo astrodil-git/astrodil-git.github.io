@@ -22,12 +22,16 @@ function mediaHTML(m) {
   </div>`;
 }
 
+function slug(t) {
+  return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 function cardHTML(p) {
   const links = (p.links || [])
     .map(l => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)}</a>`)
     .join("");
 
-  return `<article class="card${p.media ? " has-media" : ""}">
+  return `<article class="card${p.media ? " has-media" : ""}" id="${slug(p.title)}">
     ${mediaHTML(p.media)}
     <div class="card-body">
       <div class="card-meta"><span class="org">${esc(p.org)}</span><span>${esc(p.year)}</span></div>
