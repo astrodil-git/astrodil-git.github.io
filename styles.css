@@ -387,3 +387,57 @@ footer {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 12.5px;
 }
+
+/* ---------- portrait + photos ---------- */
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 56px;
+  align-items: start;
+}
+
+.portrait { margin: 0; }
+
+.portrait img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  display: block;
+  filter: grayscale(.15);
+}
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.photos figure { margin: 0; }
+
+.photos img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  display: block;
+}
+
+.photos figcaption {
+  margin-top: 10px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  line-height: 1.5;
+}
+
+.photos figcaption strong { color: var(--muted); font-weight: 500; }
+
+@media (max-width: 760px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .portrait { max-width: 160px; order: -1; }
+}
