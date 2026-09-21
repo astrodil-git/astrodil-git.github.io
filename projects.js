@@ -72,20 +72,15 @@ const PROJECTS = [
     org: "viaNexus",
     year: "2026",
     blurb:
-      "A multi-agent research workflow inside OpenBB Workspace. Ask a question in plain English, the agent routes it across viaNexus datasets, and the answer comes back as a live widget rather than a wall of text. I built the dynamic widget layer that lets the agent choose its own output format.",
+      "A research workflow that lives inside OpenBB Workspace. A question asked in plain English routes through viaNexus over vAST, the agent picks the datasets it needs, and the answer comes back as a live widget rather than a wall of text — with the data access paid for autonomously through paygentic rather than a prearranged contract. I built the dynamic widget layer that lets the agent choose its own output format.",
+    details: [
+      "Dynamic widgets: the agent selects the output format per question",
+      "vAST as the access layer, with entitlement-aware auth",
+      "Autonomous payment on data delivery via paygentic",
+    ],
     stack: ["Python", "FastAPI", "OpenBB", "LLM routing"],
     media: { type: "video", src: "assets/media/openbb-dashboard.mp4", alt: "OpenBB dashboard driven by the viaNexus agent" },
     links: [{ label: "OpenBB app marketplace", href: "https://openbb.co" }]
-  },
-  {
-    title: "Agentic Workflow Architecture",
-    group: "AI & Agents",
-    org: "viaNexus",
-    year: "2026",
-    blurb:
-      "The design behind the agent stack: modular workers that each own one job — fetch, classify, summarize, alert — composed into workflows instead of one monolithic prompt. Easier to test, cheaper to run, and you can see where an answer came from.",
-    stack: ["Python", "Redis", "Kafka", "LLMs"],
-    media: { type: "image", src: "assets/img/agentic-architecture.png", alt: "Diagram of the modular agentic workflow" }
   },
   {
     title: "Financial Chat Agent",
