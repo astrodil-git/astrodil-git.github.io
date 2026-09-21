@@ -76,8 +76,51 @@ function render() {
       <div class="group-grid">${items.map(cardHTML).join("")}</div>
     </section>`;
   }).join("");
+  layout();
   wireVideos();
 }
+
+/* True masonry: CSS grid leaves holes under short cards, and CSS columns strand
+   space when a tall card won't fit. So place each card into whichever column is
+   currently shortest, and redo it when widths or image heights change. */
+function layout() {
+  grid.querySelectorAll(".group-grid").forEach(wrap => {
+    const cards = [...wrap.querySelectorAll(".card")];
+    if (!cards.length) return;
+
+    const fit = Math.max(1, Math.min(3, Math.floor(wrap.clientWidth / 330))) || 1;
+    const n = Math.min(fit, cards.length); // never leave an empty column
+    wrap.innerHTML = "";
+    const cols = Array.from({ length: n }, () => {
+      const d = document.createElement("div");
+      d.className = "masonry-col";
+      wrap.appendChild(d);
+      return d;
+    });
+
+    cards.forEach(card => {
+      const shortest = cols.reduce((a, b) => (a.offsetHeight <= b.offsetHeight ? a : b));
+      shortest.appendChild(card);
+    });
+  });
+}
+
+/* images settle after layout runs, so measure again once they have */
+function relayoutWhenSettled() {
+  const imgs = [...grid.querySelectorAll("img")].filter(i => !i.complete);
+  let left = imgs.length;
+  if (!left) return;
+  imgs.forEach(i => i.addEventListener("load", () => { if (--left === 0) layout(); },
+                                        { once: true }));
+  imgs.forEach(i => i.addEventListener("error", () => { if (--left === 0) layout(); },
+                                        { once: true }));
+}
+
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(layout, 150);
+});
 
 function renderNav(active) {
   groupnav.innerHTML = [["all", "All"], ...groupsPresent().map(g => [slug(g), g])]
@@ -124,6 +167,7 @@ function wireVideos() {
 
 renderNav("all");
 render();
+relayoutWhenSettled();
 
 /* Cards are rendered by JS, so the browser has already given up on any #anchor
    in the URL by the time they exist. Re-resolve it after the first render —

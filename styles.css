@@ -193,11 +193,18 @@ h1 em {
   overflow: hidden;
 }
 
-.card-media img,
 .card-media video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #0b0d12;
   display: block;
 }
 
@@ -512,15 +519,22 @@ footer {
 }
 
 .group-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  display: flex;
+  align-items: flex-start;
   gap: 20px;
-  align-items: start;
   margin-top: 20px;
 }
 
+.masonry-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 @media (max-width: 640px) {
-  .group-grid { grid-template-columns: 1fr; }
+  .group-grid { flex-direction: column; }
   .group-head h2 { font-size: 1.6rem; }
 }
 
