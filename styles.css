@@ -441,3 +441,47 @@ footer {
   .hero-grid { grid-template-columns: 1fr; gap: 32px; }
   .portrait { max-width: 160px; order: -1; }
 }
+
+/* ---------- grouped sections ---------- */
+.group { margin-bottom: 64px; }
+
+.group-head {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-bottom: 24px;
+}
+
+.group-head h2 {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.9rem;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.group-count {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--dim);
+}
+
+.group-head p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14.5px;
+  max-width: 60ch;
+}
+
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 20px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+  .group-grid { grid-template-columns: 1fr; }
+}

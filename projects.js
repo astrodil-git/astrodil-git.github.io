@@ -17,6 +17,7 @@
 
 const PROJECTS = [
   {
+    group: "AI & Agents",
     title: "viaNexus MCP Server",
     org: "viaNexus",
     year: "2025—present",
@@ -39,6 +40,7 @@ const PROJECTS = [
     ]
   },
   {
+    group: "AI & Agents",
     title: "OpenBB × viaNexus Agent",
     org: "viaNexus",
     year: "2025",
@@ -50,6 +52,7 @@ const PROJECTS = [
     links: [{ label: "OpenBB app marketplace", href: "https://openbb.co" }]
   },
   {
+    group: "AI & Agents",
     title: "Agentic Workflow Architecture",
     org: "viaNexus",
     year: "2025",
@@ -60,6 +63,7 @@ const PROJECTS = [
     media: { type: "image", src: "assets/img/agentic-architecture.png", alt: "Diagram of the modular agentic workflow" }
   },
   {
+    group: "AI & Agents",
     title: "8-K Classifier Agent",
     org: "viaNexus",
     year: "2025—2026",
@@ -77,6 +81,7 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "Data Pipelines",
     title: "Earnings Calendar Pipeline",
     org: "viaNexus",
     year: "2025",
@@ -95,6 +100,7 @@ const PROJECTS = [
     links: [{ label: "Demo", href: "https://astrodil-git.github.io/dilpreet.kaur.earningCalDemo.github.io/" }]
   },
   {
+    group: "AI & Agents",
     title: "Financial Chat Agent",
     org: "viaNexus",
     year: "2025",
@@ -106,6 +112,7 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "Data Pipelines",
     title: "RSI-14 Momentum Screener",
     org: "viaNexus",
     year: "2025",
@@ -118,6 +125,7 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "AI & Agents",
     title: "Claude Skills for Market Data",
     org: "Open source",
     year: "2025",
@@ -129,6 +137,7 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "AI & Agents",
     title: "Cursor Plugin",
     org: "viaNexus",
     year: "2025",
@@ -139,23 +148,23 @@ const PROJECTS = [
     links: [{ label: "cursor.directory", href: "https://cursor.directory" }]
   },
   {
-    title: "Data Platform Deploys",
+    group: "Platform & Infrastructure",
+    title: "Deploy & Observability",
     org: "viaNexus",
     year: "2025",
     tags: ["Infrastructure", "Pipelines"],
     blurb:
-      "The deploy path for the data platform: Cloud Build triggers, containerized Airflow DAG releases to GCP, and deploy steps that halt on a failed command instead of reporting success.",
-    result: "Deploys that fail loudly",
+      "How the data platform ships and how it reports on itself. Airflow DAGs and the agent services build and release through Cloud Build triggers on GCP, and each running service publishes a health signal that synthetic checks exercise on a schedule, so a silent failure surfaces as an alert rather than as stale data nobody noticed.",
     details: [
       "Cloud Build triggers for build and deploy, separated",
       "Containerized DAG releases to GCP",
       "Health probes and alerting on the agent services",
       "Deploy steps that halt on a failed command"
     ],
-    stack: ["GCP", "Cloud Build", "Kubernetes", "Docker", "Airflow"],
-    media: { type: "video", src: "assets/media/deploying-airflow.mp4", alt: "Airflow deploy" }
+    stack: ["GCP", "Cloud Build", "Kubernetes", "Docker", "Airflow"]
   },
   {
+    group: "AI & Agents",
     title: "Market News Bot",
     org: "Personal",
     year: "2025",
@@ -167,13 +176,13 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "Platform & Infrastructure",
     title: "Scoped Access Tickets",
     org: "viaNexus",
     year: "2026",
     tags: ["Infrastructure"],
     blurb:
       "A short-lived ticket system for dataset access. Every request mints a scoped, expiring ticket instead of passing an API key through the URL, which keeps long-lived credentials out of access logs, browser history, and anything else that records a query string.",
-    result: "Scoped, expiring credentials on every dataset request",
     details: [
       "Per-request tickets minted in place of long-lived keys",
       "Applied across dataset URLs, logo URLs and prediction sources"
@@ -182,6 +191,7 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "Data Pipelines",
     title: "CityFalcon News Pipeline",
     org: "viaNexus",
     year: "2026",
@@ -197,13 +207,13 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "Data Pipelines",
     title: "MT Newswires Feed",
     org: "viaNexus",
     year: "2026",
     tags: ["Pipelines", "Infrastructure"],
     blurb:
       "Global newswire ingestion over FTP. Batch loading opens fresh connections with retry on transient timeouts, a configurable backfill path stages through GCS, and cleanup failures are contained so they can't take the task down with them.",
-    result: "Continuous global coverage with replayable backfill",
     details: [
       "FTP batch loading with fresh connections and timeout retry",
       "Configurable backfill staged through GCS",
@@ -213,13 +223,13 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "Data Pipelines",
     title: "Exchange Symbology",
     org: "viaNexus",
     year: "2026",
     tags: ["Pipelines"],
     blurb:
       "The symbology layer that maps newswire tickers to the right market. Provider-specific exchange suffixes resolve through a database-driven MIC lookup — ISO 10383 codes to two-letter suffixes — so Frankfurt, Madrid and Istanbul each land where they belong and the mapping has exactly one source of truth.",
-    result: "One lookup table behind every exchange suffix",
     details: [
       "ISO 10383 MIC codes mapped to provider suffixes",
       "US class shares handled alongside international listings"
@@ -228,17 +238,18 @@ const PROJECTS = [
     links: []
   },
   {
+    group: "Data Pipelines",
     title: "Transcripts & Events Pipeline",
     org: "viaNexus",
     year: "2026",
     tags: ["Pipelines"],
     blurb:
       "Earnings call transcripts and corporate events, ingested from Aiera on a schedule. The DAG paginates inside the API's real limits — a hard eight-week date ceiling and a 100-record page cap — and skips individual missing events rather than failing the batch, so one bad record never costs a full run.",
-    result: "Full-coverage batches that survive bad records",
     stack: ["Python", "Airflow", "REST"],
     links: []
   },
   {
+    group: "Platform & Infrastructure",
     title: "AI Crawler & SEO Work",
     org: "viaNexus",
     year: "2026",
@@ -254,6 +265,7 @@ const PROJECTS = [
     links: [{ label: "vianexus.com", href: "https://vianexus.com" }]
   },
   {
+    group: "Research",
     title: "Stellar Spectra Analysis",
     org: "Research",
     year: "2021—2023",

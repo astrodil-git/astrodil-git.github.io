@@ -1,13 +1,24 @@
-/* Renders the project grid from projects.js. No build step, no dependencies. */
+/* Renders the project sections from projects.js. No build step, no dependencies. */
 
 const grid = document.getElementById("grid");
-const filters = document.getElementById("filters");
 
-const allTags = [...new Set(PROJECTS.flatMap(p => p.tags))].sort();
-let active = "All";
+/* Section order, and the one-line framing under each heading.
+   A project lands in a section via its `group` field in projects.js. */
+const GROUP_ORDER = ["AI & Agents", "Data Pipelines", "Platform & Infrastructure", "Research"];
+
+const GROUP_NOTE = {
+  "AI & Agents": "Connectors, agents, and the tooling that lets an assistant reach live market data.",
+  "Data Pipelines": "Ingestion and derived datasets — filings, newswires, transcripts, calendars, stats.",
+  "Platform & Infrastructure": "How it ships, how it's reached, and how it reports on itself.",
+  "Research": "Before the markets, the sky.",
+};
 
 function esc(s) {
   return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+function slug(t) {
+  return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
 function mediaHTML(m) {
@@ -20,10 +31,6 @@ function mediaHTML(m) {
   return `<div class="card-media">
     <img src="${esc(m.src)}" alt="${esc(m.alt || "")}" loading="lazy">
   </div>`;
-}
-
-function slug(t) {
-  return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
 function cardHTML(p) {
@@ -49,24 +56,19 @@ function cardHTML(p) {
 }
 
 function render() {
-  const shown = active === "All" ? PROJECTS : PROJECTS.filter(p => p.tags.includes(active));
-  grid.innerHTML = shown.map(cardHTML).join("");
+  grid.innerHTML = GROUP_ORDER.map(g => {
+    const items = PROJECTS.filter(p => p.group === g);
+    if (!items.length) return "";
+    return `<section class="group" id="${slug(g)}">
+      <header class="group-head">
+        <h2>${esc(g)}<span class="group-count">${items.length}</span></h2>
+        <p>${esc(GROUP_NOTE[g] || "")}</p>
+      </header>
+      <div class="group-grid">${items.map(cardHTML).join("")}</div>
+    </section>`;
+  }).join("");
   wireVideos();
 }
-
-function renderFilters() {
-  filters.innerHTML = ["All", ...allTags]
-    .map(t => `<button class="chip" aria-pressed="${t === active}" data-tag="${esc(t)}">${esc(t)}</button>`)
-    .join("");
-}
-
-filters.addEventListener("click", e => {
-  const btn = e.target.closest(".chip");
-  if (!btn) return;
-  active = btn.dataset.tag;
-  renderFilters();
-  render();
-});
 
 /* Videos load and play only when scrolled into view, and pause when they leave.
    Keeps the page light on mobile. */
@@ -93,7 +95,6 @@ function wireVideos() {
   vids.forEach(v => io.observe(v));
 }
 
-renderFilters();
 render();
 
 /* Cards are rendered by JS, so the browser has already given up on any #anchor
@@ -106,7 +107,6 @@ if (location.hash) {
     target.classList.add("card--linked");
   }
 }
-
 
 /* ---------- writing ---------- */
 const posts = document.getElementById("posts");
