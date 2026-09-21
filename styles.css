@@ -546,3 +546,13 @@ footer {
   .group-grid { grid-template-columns: 1fr; }
   .group-head h2 { font-size: 1.6rem; }
 }
+
+/* contribution size — how much of this is actually yours */
+.scale {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: -2px 0 0 !important;
+}

@@ -44,6 +44,7 @@ function cardHTML(p) {
     <div class="card-body">
       <div class="card-meta"><span class="org">${esc(p.org)}</span><span>${esc(p.year)}</span></div>
       <h3>${esc(p.title)}</h3>
+      ${p.scale ? `<p class="scale">${esc(p.scale)}</p>` : ""}
       <p>${esc(p.blurb)}</p>
       ${p.result ? `<p class="result">${esc(p.result)}</p>` : ""}
       ${(p.details || []).length ? `<details class="detail">
