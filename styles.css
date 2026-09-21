@@ -556,3 +556,13 @@ footer {
   color: var(--accent);
   margin: -2px 0 0 !important;
 }
+
+/* a second figure on a card that has both a demo and an explainer */
+.extra { margin: 4px 0 2px; }
+
+.extra img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  display: block;
+}

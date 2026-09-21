@@ -51,6 +51,7 @@ function cardHTML(p) {
         <summary>What it covers</summary>
         <ul>${p.details.map(d => `<li>${esc(d)}</li>`).join("")}</ul>
       </details>` : ""}
+      ${p.extra ? `<figure class="extra"><img src="${esc(p.extra.src)}" alt="${esc(p.extra.alt || "")}" loading="lazy"></figure>` : ""}
       ${links ? `<div class="card-links">${links}</div>` : ""}
       <p class="stack">${(p.stack || []).map(esc).join(" · ")}</p>
     </div>
