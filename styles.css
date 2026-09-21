@@ -298,3 +298,9 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; scroll-behavior: auto; }
 }
+
+/* a card arrived at via a #deep-link, so it's obvious which one you came for */
+.card--linked {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}

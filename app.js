@@ -91,3 +91,14 @@ function wireVideos() {
 
 renderFilters();
 render();
+
+/* Cards are rendered by JS, so the browser has already given up on any #anchor
+   in the URL by the time they exist. Re-resolve it after the first render —
+   this is what the deep links in the GitHub profile README rely on. */
+if (location.hash) {
+  const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target) {
+    target.scrollIntoView();
+    target.classList.add("card--linked");
+  }
+}
