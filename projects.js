@@ -53,14 +53,14 @@ const PROJECTS = [
     media: { type: "image", src: "assets/img/agentic-architecture.png", alt: "Diagram of the modular agentic workflow" }
   },
   {
-    title: "SEC 8-K Classifier",
+    title: "8-K Classifier Agent",
     org: "viaNexus",
-    year: "2025",
+    year: "2025—2026",
     tags: ["Pipelines", "AI"],
     blurb:
-      "Rewrote 8-K classification to read the filing's own declared item codes from EDGAR instead of guessing with an LLM over scraped HTML. Same job, deterministic, and it stopped silently mislabeling filings.",
-    result: "Replaced LLM guessing with the source of truth",
-    stack: ["Python", "Airflow", "EDGAR", "Redis"],
+      "A real-time classification system for SEC 8-K filings. Every 8-K declares its own item codes — 2.02 for results of operations, 5.02 for director changes — and SEC publishes those as structured metadata, so the agent reads that field directly: no HTML download, no regex, no LLM in the data path. It sweeps the daily index hourly, keys every write to the SEC accession number so reruns can't duplicate, and feeds the earnings calendar pipeline plus a live dashboard and REST API.",
+    result: "Classifies the whole S&P 500 in 30–40 requests per cycle",
+    stack: ["Python", "FastAPI", "Redis", "Docker", "SEC EDGAR"],
     links: []
   },
   {
@@ -69,7 +69,7 @@ const PROJECTS = [
     year: "2025",
     tags: ["Pipelines"],
     blurb:
-      "Untangled a calendar that was quietly freezing: symbols stuck on stale predicted dates, missing pre/post-market sessions, hundreds of orphaned rows. Traced it end to end, shipped the fixes, and backfilled the history.",
+      "The pipeline behind CORE/EARNINGS_CALENDAR. It predicts each company's next report date from its filing history, then confirms or corrects that prediction the moment the 8-K classifier sees the real filing, and carries a pre/post-market session indicator so you know whether a print lands before the open or after the close.",
     result: "467 symbols with confirmed sessions, up from 230",
     stack: ["Python", "Airflow", "SingleStore", "SEC 8-K"],
     media: { type: "image", src: "assets/img/earnings-calendar.png", alt: "Earnings calendar widget" },
@@ -125,7 +125,8 @@ const PROJECTS = [
     year: "2025",
     tags: ["Infrastructure", "Pipelines"],
     blurb:
-      "Airflow on GCP: Cloud Build triggers, containerized DAG deploys, and the unglamorous work of making a deploy step fail loudly instead of silently succeeding.",
+      "The deploy path for the data platform: Cloud Build triggers, containerized Airflow DAG releases to GCP, and deploy steps that halt on a failed command instead of reporting success.",
+    result: "Deploys that fail loudly",
     stack: ["GCP", "Cloud Build", "Kubernetes", "Docker", "Airflow"],
     media: { type: "video", src: "assets/media/deploying-airflow.mp4", alt: "Airflow deploy" }
   },
@@ -141,13 +142,13 @@ const PROJECTS = [
     links: []
   },
   {
-    title: "Access Ticket Rewrite",
+    title: "Scoped Access Tickets",
     org: "viaNexus",
     year: "2026",
     tags: ["Infrastructure"],
     blurb:
-      "Dataset URLs used to carry long-lived API keys in the query string, which meant every key was sitting in access logs and browser history. Replaced them with short-lived, scoped access tickets minted per request.",
-    result: "Long-lived keys out of URLs entirely",
+      "A short-lived ticket system for dataset access. Every request mints a scoped, expiring ticket instead of passing an API key through the URL, which keeps long-lived credentials out of access logs, browser history, and anything else that records a query string.",
+    result: "Scoped, expiring credentials on every dataset request",
     stack: ["Node.js", "GCP", "Redis"],
     links: []
   },
@@ -167,7 +168,8 @@ const PROJECTS = [
     year: "2026",
     tags: ["Pipelines", "Infrastructure"],
     blurb:
-      "FTP ingestion for a global newswire: batch loading with retries and fresh connections, a configurable backfill path staged through GCS, and cleanup that fails gracefully instead of taking the whole task down.",
+      "Global newswire ingestion over FTP. Batch loading opens fresh connections with retry on transient timeouts, a configurable backfill path stages through GCS, and cleanup failures are contained so they can't take the task down with them.",
+    result: "Continuous global coverage with replayable backfill",
     stack: ["Python", "Airflow", "FTP", "GCS"],
     links: []
   },
@@ -177,7 +179,8 @@ const PROJECTS = [
     year: "2026",
     tags: ["Pipelines"],
     blurb:
-      "Newswire tickers arrived with provider-specific exchange suffixes that quietly mapped to the wrong markets — Frankfurt, Madrid and Istanbul all landing somewhere else. Replaced the hardcoded table with a database-driven MIC lookup so the mapping has one source of truth.",
+      "The symbology layer that maps newswire tickers to the right market. Provider-specific exchange suffixes resolve through a database-driven MIC lookup — ISO 10383 codes to two-letter suffixes — so Frankfurt, Madrid and Istanbul each land where they belong and the mapping has exactly one source of truth.",
+    result: "One lookup table behind every exchange suffix",
     stack: ["Python", "SingleStore", "ISO 10383"],
     links: []
   },
@@ -187,7 +190,8 @@ const PROJECTS = [
     year: "2026",
     tags: ["Pipelines"],
     blurb:
-      "Earnings call transcripts and corporate events from Aiera. Most of the work was learning the API's undocumented edges — a hard eight-week date ceiling and a page-size cap — and making the DAG respect them instead of silently truncating.",
+      "Earnings call transcripts and corporate events, ingested from Aiera on a schedule. The DAG paginates inside the API's real limits — a hard eight-week date ceiling and a 100-record page cap — and skips individual missing events rather than failing the batch, so one bad record never costs a full run.",
+    result: "Full-coverage batches that survive bad records",
     stack: ["Python", "Airflow", "REST"],
     links: []
   },
@@ -197,7 +201,8 @@ const PROJECTS = [
     year: "2026",
     tags: ["Infrastructure"],
     blurb:
-      "Synthetic monitoring that actually exercises the MCP proxy end to end, plus health probes for the classifier agent. Also fixed the alerting itself, which was paging for days off a single failed run.",
+      "Synthetic monitoring for the MCP stack. A probe exercises the proxy end to end on a schedule — real auth, real fetch, real response — alongside health checks for the classifier agent, with alerting tuned to page on a sustained failure rather than a single blip.",
+    result: "End-to-end probes on the live connector path",
     stack: ["Python", "GCP Monitoring", "Terraform"],
     links: []
   },
@@ -207,7 +212,8 @@ const PROJECTS = [
     year: "2026",
     tags: ["AI", "Infrastructure"],
     blurb:
-      "A run of fixes so the connector tells the truth: a missing dataset returns not-found instead of permission-denied, a subscription gap reads differently from an auth failure, and a truncated response says it was truncated. Small changes that stop an AI assistant from confidently reporting the wrong thing.",
+      "The error layer that makes the connector honest with an AI assistant. A missing dataset reads as not-found, a subscription gap reads differently from an auth failure, and a truncated response says it was truncated — so the model can tell the user what actually happened instead of confidently reporting the wrong reason.",
+    result: "Every failure mode says what it is",
     stack: ["Python", "MCP", "OAuth"],
     links: []
   },
