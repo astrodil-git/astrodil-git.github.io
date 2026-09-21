@@ -67,6 +67,7 @@ const PROJECTS = [
     ],
     stack: ["Python", "FastAPI", "Redis", "Docker", "SEC EDGAR"],
     media: { type: "image", src: "assets/img/8k-classifier-agent.png", alt: "How the 8-K classifier agent decides a filing's type" },
+    extra: { src: "assets/img/8k-dashboard.png", alt: "The dashboard the agent serves over its classified filings" },
     links: []
   },
   {
