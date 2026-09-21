@@ -1,6 +1,7 @@
 /* Renders the project sections from projects.js. No build step, no dependencies. */
 
 const grid = document.getElementById("grid");
+const groupnav = document.getElementById("groupnav");
 
 /* Section order, and the one-line framing under each heading.
    A project lands in a section via its `group` field in projects.js. */
@@ -55,20 +56,62 @@ function cardHTML(p) {
   </article>`;
 }
 
+function groupsPresent() {
+  return GROUP_ORDER.filter(g => PROJECTS.some(p => p.group === g));
+}
+
 function render() {
-  grid.innerHTML = GROUP_ORDER.map(g => {
+  grid.innerHTML = groupsPresent().map(g => {
     const items = PROJECTS.filter(p => p.group === g);
-    if (!items.length) return "";
     return `<section class="group" id="${slug(g)}">
-      <header class="group-head">
+      <button class="group-head" aria-expanded="true" aria-controls="body-${slug(g)}">
         <h2>${esc(g)}<span class="group-count">${items.length}</span></h2>
         <p>${esc(GROUP_NOTE[g] || "")}</p>
-      </header>
-      <div class="group-grid">${items.map(cardHTML).join("")}</div>
+        <span class="group-toggle" aria-hidden="true"></span>
+      </button>
+      <div class="group-grid" id="body-${slug(g)}">${items.map(cardHTML).join("")}</div>
     </section>`;
   }).join("");
   wireVideos();
 }
+
+function renderNav(active) {
+  groupnav.innerHTML = [["all", "All"], ...groupsPresent().map(g => [slug(g), g])]
+    .map(([id, label]) => {
+      const n = id === "all" ? PROJECTS.length : PROJECTS.filter(p => slug(p.group) === id).length;
+      return `<button class="group-chip" data-target="${id}" aria-pressed="${id === active}">${esc(label)}<span>${n}</span></button>`;
+    }).join("");
+}
+
+function setOpen(section, open) {
+  section.querySelector(".group-head").setAttribute("aria-expanded", String(open));
+  section.classList.toggle("is-closed", !open);
+}
+
+/* Nav: "All" opens everything; a section name opens that one alone and scrolls to it. */
+groupnav.addEventListener("click", e => {
+  const btn = e.target.closest(".group-chip");
+  if (!btn) return;
+  const target = btn.dataset.target;
+  renderNav(target);
+
+  grid.querySelectorAll(".group").forEach(sec => {
+    setOpen(sec, target === "all" || sec.id === target);
+  });
+
+  if (target !== "all") {
+    const sec = document.getElementById(target);
+    if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+/* A section heading is itself a toggle. */
+grid.addEventListener("click", e => {
+  const head = e.target.closest(".group-head");
+  if (!head) return;
+  const sec = head.closest(".group");
+  setOpen(sec, sec.classList.contains("is-closed"));
+});
 
 /* Videos load and play only when scrolled into view, and pause when they leave.
    Keeps the page light on mobile. */
@@ -95,6 +138,7 @@ function wireVideos() {
   vids.forEach(v => io.observe(v));
 }
 
+renderNav("all");
 render();
 
 /* Cards are rendered by JS, so the browser has already given up on any #anchor
@@ -103,6 +147,8 @@ render();
 if (location.hash) {
   const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if (target) {
+    const sec = target.closest(".group");
+    if (sec) setOpen(sec, true);
     target.scrollIntoView();
     target.classList.add("card--linked");
   }
