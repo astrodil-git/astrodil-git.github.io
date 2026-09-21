@@ -62,8 +62,11 @@ function groupsPresent() {
   return GROUP_ORDER.filter(g => PROJECTS.some(p => p.group === g));
 }
 
+let activeGroup = "all";
+
 function render() {
-  grid.innerHTML = groupsPresent().map(g => {
+  const shown = groupsPresent().filter(g => activeGroup === "all" || slug(g) === activeGroup);
+  grid.innerHTML = shown.map(g => {
     const items = PROJECTS.filter(p => p.group === g);
     return `<section class="group" id="${slug(g)}">
       <header class="group-head">
@@ -84,15 +87,14 @@ function renderNav(active) {
     }).join("");
 }
 
-/* Nav scrolls to a section. Nothing collapses — everything stays on the page. */
+/* The nav selects which section is on the page. "All" shows every one. */
 groupnav.addEventListener("click", e => {
   const btn = e.target.closest(".group-chip");
   if (!btn) return;
-  renderNav(btn.dataset.target);
-  const dest = btn.dataset.target === "all"
-    ? document.querySelector(".controls")
-    : document.getElementById(btn.dataset.target);
-  if (dest) dest.scrollIntoView({ behavior: "smooth", block: "start" });
+  activeGroup = btn.dataset.target;
+  renderNav(activeGroup);
+  render();
+  document.querySelector(".controls").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 /* Videos load and play only when scrolled into view, and pause when they leave.
@@ -127,7 +129,14 @@ render();
    in the URL by the time they exist. Re-resolve it after the first render —
    this is what the deep links in the GitHub profile README rely on. */
 if (location.hash) {
-  const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  const wanted = decodeURIComponent(location.hash.slice(1));
+  const owner = PROJECTS.find(p => slug(p.title) === wanted);
+  if (owner) {
+    activeGroup = slug(owner.group);
+    renderNav(activeGroup);
+    render();
+  }
+  const target = document.getElementById(wanted);
   if (target) {
     target.scrollIntoView();
     target.classList.add("card--linked");
