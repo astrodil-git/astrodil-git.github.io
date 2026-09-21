@@ -66,12 +66,11 @@ function render() {
   grid.innerHTML = groupsPresent().map(g => {
     const items = PROJECTS.filter(p => p.group === g);
     return `<section class="group" id="${slug(g)}">
-      <button class="group-head" aria-expanded="true" aria-controls="body-${slug(g)}">
+      <header class="group-head">
         <h2>${esc(g)}<span class="group-count">${items.length}</span></h2>
         <p>${esc(GROUP_NOTE[g] || "")}</p>
-        <span class="group-toggle" aria-hidden="true"></span>
-      </button>
-      <div class="group-grid" id="body-${slug(g)}">${items.map(cardHTML).join("")}</div>
+      </header>
+      <div class="group-grid">${items.map(cardHTML).join("")}</div>
     </section>`;
   }).join("");
   wireVideos();
@@ -85,34 +84,15 @@ function renderNav(active) {
     }).join("");
 }
 
-function setOpen(section, open) {
-  section.querySelector(".group-head").setAttribute("aria-expanded", String(open));
-  section.classList.toggle("is-closed", !open);
-}
-
-/* Nav: "All" opens everything; a section name opens that one alone and scrolls to it. */
+/* Nav scrolls to a section. Nothing collapses — everything stays on the page. */
 groupnav.addEventListener("click", e => {
   const btn = e.target.closest(".group-chip");
   if (!btn) return;
-  const target = btn.dataset.target;
-  renderNav(target);
-
-  grid.querySelectorAll(".group").forEach(sec => {
-    setOpen(sec, target === "all" || sec.id === target);
-  });
-
-  if (target !== "all") {
-    const sec = document.getElementById(target);
-    if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-});
-
-/* A section heading is itself a toggle. */
-grid.addEventListener("click", e => {
-  const head = e.target.closest(".group-head");
-  if (!head) return;
-  const sec = head.closest(".group");
-  setOpen(sec, sec.classList.contains("is-closed"));
+  renderNav(btn.dataset.target);
+  const dest = btn.dataset.target === "all"
+    ? document.querySelector(".controls")
+    : document.getElementById(btn.dataset.target);
+  if (dest) dest.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 /* Videos load and play only when scrolled into view, and pause when they leave.
@@ -149,8 +129,6 @@ render();
 if (location.hash) {
   const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if (target) {
-    const sec = target.closest(".group");
-    if (sec) setOpen(sec, true);
     target.scrollIntoView();
     target.classList.add("card--linked");
   }

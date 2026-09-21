@@ -53,17 +53,17 @@ const PROJECTS = [
     year: "2025—2026",
     scale: "19 merged PRs · built from scratch",
     blurb:
-      "A real-time classification service for SEC 8-K filings, mine end to end from first commit to production. Every 8-K declares its own item codes — 2.02 for results of operations, 5.02 for director changes — and SEC publishes those as structured metadata, so the agent reads that field directly: no HTML download, no regex, no LLM in the data path. It sweeps the daily index hourly, keys every write to the SEC accession number so reruns can't duplicate, and feeds the earnings calendar plus a live dashboard and REST API.",
+      "A real-time classification service for SEC 8-K filings, mine end to end from first commit to production. Every 8-K declares its own item codes — 2.02 for results of operations, 5.02 for director changes — and SEC publishes those as structured metadata, so the agent reads that field directly: no HTML download, no regex, no LLM in the data path. It sweeps the daily index hourly, keys every write to the SEC accession number so reruns can't duplicate, and feeds the earnings calendar through a REST API.",
     result: "Classifies the whole S&P 500 in 30–40 requests per cycle",
     details: [
       "Rate-limited EDGAR client running under SEC's fair-access ceiling",
       "Incremental hourly sweep of the daily index, weekly full sweep for backfill",
       "Accession-keyed writes, so reruns are idempotent",
       "Exponential backoff and retry across the whole symbol universe",
-      "Live dashboard and REST API over the classified set",
+      "REST API over the classified set, consumed by the earnings calendar",
     ],
     stack: ["Python", "FastAPI", "Redis", "Docker", "SEC EDGAR"],
-    media: { type: "image", src: "assets/img/8k-dashboard.png", alt: "The 8-K classifier agent's monitoring dashboard" },
+    media: { type: "image", src: "assets/img/8k-classifier-agent.png", alt: "How the 8-K classifier agent decides a filing's type" },
     links: []
   },
   {

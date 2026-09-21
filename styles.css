@@ -480,16 +480,12 @@ footer {
   background: none;
   border: 0;
   border-top: 1px solid var(--line);
-  padding: 18px 44px 0 0;
+  padding: 18px 0 0;
   position: relative;
-  cursor: pointer;
   color: inherit;
   font: inherit;
   transition: border-color .15s;
 }
-
-.group-head:hover { border-top-color: #3a4150; }
-.group-head:hover h2 { color: var(--accent); }
 
 .group-head h2 {
   font-family: "Instrument Serif", Georgia, serif;
@@ -515,23 +511,6 @@ footer {
   max-width: 60ch;
 }
 
-/* chevron */
-.group-toggle {
-  position: absolute;
-  right: 6px;
-  top: 30px;
-  width: 11px;
-  height: 11px;
-  border-right: 1.5px solid var(--dim);
-  border-bottom: 1.5px solid var(--dim);
-  transform: rotate(45deg);
-  transition: transform .2s, border-color .15s;
-}
-
-.group-head:hover .group-toggle { border-color: var(--accent); }
-
-.is-closed .group-toggle { transform: rotate(-135deg); }
-
 .group-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
@@ -539,8 +518,6 @@ footer {
   align-items: start;
   margin-top: 20px;
 }
-
-.is-closed .group-grid { display: none; }
 
 @media (max-width: 640px) {
   .group-grid { grid-template-columns: 1fr; }
