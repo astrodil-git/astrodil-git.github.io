@@ -83,7 +83,7 @@ const PROJECTS = [
       "Autonomous payment on data delivery via paygentic",
     ],
     stack: ["Python", "FastAPI", "OpenBB", "LLM routing"],
-    media: { type: "video", src: "assets/media/openbb-dashboard.mp4", alt: "OpenBB dashboard driven by the viaNexus agent" },
+    media: { type: "image", src: "assets/img/openbb-vianexus-agent.png", alt: "How a question in OpenBB Workspace is answered and paid for" },
     links: [{ label: "OpenBB app marketplace", href: "https://openbb.co" }]
   },
   {
@@ -94,7 +94,8 @@ const PROJECTS = [
     blurb:
       "A chat agent that watches the market and emails you when something you care about happens — a death cross, an earnings move, a momentum break. I built the detection logic, the alert delivery, and the conversational front end.",
     stack: ["Python", "Redis", "LLMs", "SMTP"],
-    media: { type: "video", src: "assets/media/paygentic-agent.mp4", alt: "Financial chat agent answering a market question" },
+    media: { type: "video", src: "assets/media/openbb-dashboard.mp4", alt: "The financial chat agent working across news and earnings" },
+    extra: { type: "video", src: "assets/media/paygentic-agent.mp4", alt: "Setting a death-cross alert in conversation" },
     links: []
   },
   {

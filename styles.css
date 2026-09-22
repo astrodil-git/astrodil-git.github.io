@@ -1,7 +1,7 @@
 :root {
   --bg: #08090c;
-  --bg-card: #0f1116;
-  --bg-card-hover: #14171e;
+  --bg-card: #0f1116f2;
+  --bg-card-hover: #14171ef7;
   --line: #22262f;
   --text: #e9ebf0;
   --muted: #8f96a6;
@@ -16,9 +16,23 @@
 
 html { scroll-behavior: smooth; }
 
+/* the starfield sits on the root so the body can stay transparent above it */
+html { background: var(--bg); }
+
+#sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+/* everything real stacks above the sky */
+.spectrum, .hero, main, footer { position: relative; z-index: 1; }
+
 body {
   margin: 0;
-  background: var(--bg);
+  background: transparent;
   color: var(--text);
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 16px;
@@ -551,7 +565,8 @@ footer {
 /* a second figure on a card that has both a demo and an explainer */
 .extra { margin: 4px 0 2px; }
 
-.extra img {
+.extra img,
+.extra video {
   width: 100%;
   border-radius: 8px;
   border: 1px solid var(--line);

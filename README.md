@@ -47,3 +47,9 @@ git add -A && git commit -m "add project" && git push
 ## Custom domain (optional)
 
 Add a `CNAME` file containing your domain, then point a `CNAME` DNS record at `astrodil-git.github.io`.
+
+## Changing CSS or JS
+
+Run `./bump.sh` before committing. It stamps a version onto the `styles.css` and
+`*.js` links in `index.html` so browsers and the GitHub Pages CDN fetch the new
+file instead of serving a stale cached copy.
